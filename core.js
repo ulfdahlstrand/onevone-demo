@@ -17,7 +17,7 @@ var App = {
 
 		require("./routes")();
 
-		App.Server = App.Express.listen(config.port, function() {
+		App.Server = App.Express.listen(process.env.PORT || config.port, function() {
 		    console.log("Listening on port %d", App.Server.address().port);
 
 			console.log("Try the following URLs to demo the API: ");
