@@ -18,7 +18,7 @@ function MatchPipeline() {
 	that.updateLeague = function(leagueId){
 	    
 	    var tasks = [
-	    	leagueApi.retriveSummonersInLeague,
+	    	leagueApi.retriveLeague,
 	    	riotApi.retrieveResentMatchesforSummoners,
 	    	matchProcessor.processMatches
 	    ];
