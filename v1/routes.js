@@ -12,32 +12,27 @@ module.exports = function() {
     var matchPipeline = require("./matchPipeline")();
 	// Validate token in routine
 	function validateToken(req, res, next) {
-		// Handle secret admin access
-		if(config.adminKeyEnabled && req.query.secret_admin === config.adminKey) {
-			next();
-		} else {
-			try {
-				if(!req.headers.api_token) {
-					throw { code: "NO_TOKEN" };
-				}
-
-				if(!req.headers.api_secret) {
-					throw { code: "NO_TOKEN" };
-				}
-
-				if(!tokens[req.headers.api_token]) {
-					throw { code: "INVALID_TOKEN" };
-				}
-
-				if(tokens[req.headers.api_token].secret !== req.headers.api_secret) {
-					throw { code: "INVALID_TOKEN" };
-				}
-
-				next();
-			} catch(e) {
-				errorHandling.handle(e, res);
+		try {
+			if(!req.headers.api_token) {
+				throw { code: "NO_TOKEN" };
 			}
-		}
+
+			if(!req.headers.api_secret) {
+				throw { code: "NO_TOKEN" };
+			}
+
+			if(!tokens[req.headers.api_token]) {
+				throw { code: "INVALID_TOKEN" };
+			}
+
+			if(tokens[req.headers.api_token].secret !== req.headers.api_secret) {
+				throw { code: "INVALID_TOKEN" };
+			}
+
+			next();
+		} catch(e) {
+			errorHandling.handle(e, res);
+		}		
 	}
 
 	App.Express.get("/summoner/name/:summoner_name", validateToken, function (req, res) {

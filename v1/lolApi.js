@@ -8,7 +8,7 @@ var when = require('when');
  * The model object
  * @constructor
  */
-function RiotApi() {
+function LoLApi() {
 	var that = this;
 
 	/**
@@ -41,25 +41,25 @@ function RiotApi() {
 	    return deferred.promise; 
 	};
 
-	that.retrieveResentMatchesforSummoners = function(summoners){
-		summonersWithMatches = summoners;
-		summonersWithMatches.matches = [];
-
+	that.retrieveResentMatchesforSummoners = function(pipelineContainer){
 		var deferred = when.defer();
 		var deferreds = [];
-		summonersWithMatches.summonerIds.forEach(function(summonerId) {
-			var matchpromise = that.retrieveSummonerMatches(summonerId).then(function(matches) {
-				summonersWithMatches.matches.push(matches);
+		pipelineContainer.recentMatches = [];
+
+		pipelineContainer.league.summonerIds.forEach(function(summonerId) {
+			var matchpromise = that.retrieveSummonerMatches(summonerId)
+			.then(function(matches) {
+				pipelineContainer.recentMatches.push(matches);
 			});
 			deferreds.push(matchpromise);
 		});
 
 		when.all(deferreds).then(function(){
-			deferred.resolve(summonersWithMatches);
+			deferred.resolve(pipelineContainer);
 		});	
 		return deferred.promise; 
 	};
 
 }
 
-module.exports = new RiotApi();
+module.exports = new LoLApi();

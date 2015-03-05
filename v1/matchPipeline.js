@@ -7,7 +7,7 @@ var when = require('when');
 var pipeline = require('when/pipeline');
 
 var leagueApi = require('./leagueApi');
-var riotApi = require('./riotApi');
+var lolApi = require('./lolApi');
 var matchProcessor = require('./matchProcessor');
 
 function MatchPipeline() {
@@ -17,13 +17,28 @@ function MatchPipeline() {
 
 	that.updateLeague = function(leagueId){
 	    
-	    var tasks = [
-	    	leagueApi.retriveLeague,
-	    	riotApi.retrieveResentMatchesforSummoners,
-	    	matchProcessor.processMatches
+	    var pipelineContainer = {};
+	    pipelineContainer.leagueId = leagueId;
+	    pipelineContainer.statistics = {};
+
+	    var executionOrder = [
+	    	leagueApi.getLeagueById,
+	    	lolApi.retrieveResentMatchesforSummoners,
+	    	matchProcessor.processMatches,
+	    	leagueApi.updateLeagueWithMatchResults,
+	    	leagueApi.saveLeague,
+	    	that.processStatistics
 	    ];
 
-		return pipeline(tasks, leagueId);
+		return pipeline(executionOrder, pipelineContainer);
+	};
+
+	that.processStatistics = function(pipelineContainer){
+		var deferred = when.defer();
+		var statistics = pipelineContainer.statistics;
+		deferred.resolve(pipelineContainer);
+		//deferred.resolve(statistics);
+		return deferred.promise;
 	};
 }
 

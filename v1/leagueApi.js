@@ -1,70 +1,81 @@
-var request = require("request");
 var _ =  require("underscore");
 var moment = require("moment");
 var config = require("../config").v1;
 var http = require('request');
 var when = require('when');
 var mongoose = require('mongoose');
-
-var username = 'onevone_user';
-var password = 'TBIW3QikL5CMZdSo';
-var connectionString = 'mongodb://'+username+':'+password+'@ds037601.mongolab.com:37601/heroku_app34246627';
+var League = require('./models/League');
+var Match = require('./models/Match');
 
 
-mongoose.connect(connectionString);
-/*
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) {
-  
-		  var kittySchema = mongoose.Schema({
-		    name: String
-		})
-
-		kittySchema.methods.speak = function () {
-		  var greeting = this.name
-		    ? "Meow name is " + this.name
-		    : "I don't have a name"
-		  console.log(greeting);
-		}
-
-
-  	var Kitten = mongoose.model('Kitten', kittySchema)
-
-
-
-  	var silence = new Kitten({ name: 'Silence' })
-
-	silence.save(function (err, silence) {
-	  if (err) return console.error(err);
-	  silence.speak();
-	});
-
-});*/
 
 function LeagueApi() {
 	var that = this;
+	mongoose.connect(config.db_connectionString);
+	var db = mongoose.connection;
+	db.on('error', console.error.bind(console, 'connection error:'));
 
-		that.retriveLeague = function(leagueId) {
-	    var league = {
-	    	"leagueId": leagueId,
-	    	"summonerIds":[]
-	    };
-
-	    var deferred = when.defer();
-
-		if(leagueId == 1){
-			league.summonerIds = [50208267, 49982720];
+	db.once('open', function (callback) {
+		that.createLeague = function(){
+			var deferred = when.defer();
 			
-		}else{
-			league.summonerIds = [50208267];
+			var l = new League();
+			var g = new Match();
+
+			g.summonerIds = [ 50208267, 49982720];
+
+			l.name = "test";
+			l.summonerIds = [ 50208267, 49982720];
+			l.matches.push(g);
+
+			l.save(function(err, league){
+				console.log(err);
+			}); 
+
+			return deferred.promise;
 		}
 
-		deferred.resolve(league);
+		that.getLeagueById = function(pipelineContainer) {
+			var deferred = when.defer();
+			
+			League.findOne({"_id" : pipelineContainer.leagueId}, function(err,league){
+				pipelineContainer.league = league;
+				deferred.resolve(pipelineContainer);
+			});
+			
+			return deferred.promise;
+		};
 
-	    return deferred.promise; 
-	};
+		that.updateLeagueWithMatchResults = function(pipelineContainer){
+			var deferred = when.defer();
+			var league = pipelineContainer.league;
+			var validMatches = pipelineContainer.validMatches
 
+			league.matches.forEach(function(match){
+	    		if(!match.hasBeenPlayed){
+		    		match.updateMatchFromPlayedMatches(validMatches);
+	    		}
+	    	});
+
+			deferred.resolve(pipelineContainer);
+			return deferred.promise;
+		};
+
+		that.saveLeague = function(pipelineContainer){
+			var deferred = when.defer();
+			var league = pipelineContainer.league;
+
+	    	league.save(function (err) {
+	    		if(err){ console.log(err); }
+	    		else{
+	    			deferred.resolve(pipelineContainer);
+	    		}
+			});
+
+			return deferred.promise;
+		};
+	});
 }
+
 
 module.exports = new LeagueApi();
