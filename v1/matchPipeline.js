@@ -6,6 +6,7 @@ var http = require('request');
 var when = require('when');
 var pipeline = require('when/pipeline');
 
+var Statistics = require('./models/Statistics');
 var leagueApi = require('./leagueApi');
 var lolApi = require('./lolApi');
 var matchProcessor = require('./matchProcessor');
@@ -19,7 +20,7 @@ function MatchPipeline() {
 	    
 	    var pipelineContainer = {};
 	    pipelineContainer.leagueId = leagueId;
-	    pipelineContainer.statistics = {};
+	    pipelineContainer.statistics = Statistics();
 
 	    var executionOrder = [
 	    	leagueApi.getLeagueById,
@@ -36,8 +37,8 @@ function MatchPipeline() {
 	that.processStatistics = function(pipelineContainer){
 		var deferred = when.defer();
 		var statistics = pipelineContainer.statistics;
-		deferred.resolve(pipelineContainer);
-		//deferred.resolve(statistics);
+		//deferred.resolve(pipelineContainer);
+		deferred.resolve(statistics.variables);
 		return deferred.promise;
 	};
 }

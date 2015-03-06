@@ -23,11 +23,10 @@ matchSchema.statics.mapFromLolMatch = function (summonerId, game) {
 matchSchema.methods.copyValuesFromMatch = function (match) {
 	this.hasBeenPlayed = match.hasBeenPlayed;
 	this.gameId = match.gameId;
-	console.log(this);
 	return this;
 }
 
-matchSchema.methods.updateMatchFromPlayedMatches = function(playedMatches){
+matchSchema.methods.updateMatchFromPlayedMatches = function(playedMatches, _callback){
 		var that = this;
     	playedMatches.forEach(function(playedMatch){	
 			playedMatch.games.forEach(function(game){
@@ -35,6 +34,7 @@ matchSchema.methods.updateMatchFromPlayedMatches = function(playedMatches){
 				if(_.isEqual(_.sortBy(that.summonerIds), _.sortBy(mappedlolmatch.summonerIds))){
 					that.copyValuesFromMatch(mappedlolmatch);
 					that.hasBeenPlayed = true;
+					if(_callback){ _callback() };
 				}	
 			});
 		});

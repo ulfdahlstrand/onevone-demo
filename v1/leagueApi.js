@@ -37,10 +37,12 @@ function LeagueApi() {
 
 		that.getLeagueById = function(pipelineContainer) {
 			var deferred = when.defer();
-			
+			var statistics = pipelineContainer.statistics;
+
 			League.findOne({"_id" : pipelineContainer.leagueId}, function(err,league){
 				pipelineContainer.league = league;
 				deferred.resolve(pipelineContainer);
+				statistics.incrementLeaguesItterated();
 			});
 			
 			return deferred.promise;
@@ -49,11 +51,12 @@ function LeagueApi() {
 		that.updateLeagueWithMatchResults = function(pipelineContainer){
 			var deferred = when.defer();
 			var league = pipelineContainer.league;
-			var validMatches = pipelineContainer.validMatches
+			var validMatches = pipelineContainer.validMatches;
+			var statistics = pipelineContainer.statistics;
 
 			league.matches.forEach(function(match){
 	    		if(!match.hasBeenPlayed){
-		    		match.updateMatchFromPlayedMatches(validMatches);
+		    		match.updateMatchFromPlayedMatches(validMatches, statistics.incrementUpdatedGames);
 	    		}
 	    	});
 
@@ -64,6 +67,7 @@ function LeagueApi() {
 		that.saveLeague = function(pipelineContainer){
 			var deferred = when.defer();
 			var league = pipelineContainer.league;
+			var statistics = pipelineContainer.statistics;
 
 	    	league.save(function (err) {
 	    		if(err){ console.log(err); }
