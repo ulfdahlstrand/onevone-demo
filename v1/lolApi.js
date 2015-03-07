@@ -46,6 +46,8 @@ function LoLApi() {
 	    return deferred.promise; 
 	};
 
+	//add a wrapper for a list of
+
 	that.retrieveResentMatchesforSummoners = function(pipelineContainer){
 		var deferred = when.defer();
 		var deferreds = [];
