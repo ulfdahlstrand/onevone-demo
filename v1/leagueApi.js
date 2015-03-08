@@ -36,7 +36,6 @@ function LeagueApi() {
 		}
 
 		that.getLeagueById = function(pipelineContainer) {
-			that.createLeague();
 			var deferred = when.defer();
 			var statistics = pipelineContainer.statistics;
 

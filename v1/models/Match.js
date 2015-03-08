@@ -4,7 +4,8 @@ var _ =  require("underscore");
 var matchSchema = mongoose.Schema({
     gameId: String,
     summonerIds: [Number],
-    winner: [Number],
+    winners: [Number],
+    losers: [Number],
     hasBeenPlayed: { type: Boolean, default: false } 
 });
 
@@ -15,14 +16,51 @@ matchSchema.statics.mapFromLolMatch = function (summonerId, game) {
 		match.summonerIds.push(summoner.summonerId);
 	});
 
+	if(game.stats.win){
+		match.addWin(summonerId);
+	}
+	else{
+		match.addLoss(summonerId);
+	}
+
 	match.gameId = game.gameId;
 	
 	return match;
 }
 
+matchSchema.methods.addWin = function(summonerId){
+	if(this.winners.indexOf(summonerId) < 0){
+		this.winners.push(summonerId);
+	}
+};
+
+matchSchema.methods.addWins = function(summonerIds){
+	var that = this;
+	summonerIds.forEach(function(summonerId){
+		console.log(summonerId);
+		that.addWin(summonerId);
+	});
+};
+
+matchSchema.methods.addLoss = function(summonerId){
+	if(this.losers.indexOf(summonerId) < 0){
+		this.losers.push(summonerId);
+	}
+};
+
+matchSchema.methods.addLosses = function(summonerIds){
+	var that = this;
+	summonerIds.forEach(function(summonerId){
+		console.log(summonerId);
+		that.addLoss(summonerId);
+	});
+};
+
 matchSchema.methods.copyValuesFromMatch = function (match) {
 	this.hasBeenPlayed = match.hasBeenPlayed;
 	this.gameId = match.gameId;
+	this.addWins(match.winners);
+	this.addLosses(match.losers);
 	return this;
 }
 

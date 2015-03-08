@@ -45,8 +45,8 @@ function MatchProcessor() {
 
 		if(game.gameType !== 'CUSTOM_GAME') { return false; }
 		if(!game.hasOwnProperty("fellowPlayers")) { return false; }
-		if(game.fellowPlayers.length !== 1) { return false; }
-		if(game.teamId === game.fellowPlayers[0].teamId) { return false; }
+		//if(game.fellowPlayers.length !== 1) { return false; }
+		//if(game.teamId === game.fellowPlayers[0].teamId) { return false; }
 
 		return true;
 
