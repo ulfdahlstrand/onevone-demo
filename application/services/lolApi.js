@@ -1,7 +1,6 @@
 var request = require("request");
 var _ =  require("underscore");
 var moment = require("moment");
-var config = require("../config").v1;
 var http = require('request');
 var when = require('when');
 /**
@@ -15,7 +14,7 @@ function LoLApi() {
 	 * Cache instance
 	 * @type {Object}
 	 */
-	that.cache = require("./cache")(config.cacheEnabled, config.cacheDuration);
+	//that.cache = require("./cache")(config.cacheEnabled, config.cacheDuration);
 
 	that.retrieveSummoner = function(summonerName, _callback) {
 	    var deferred = when.defer();

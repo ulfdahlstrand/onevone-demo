@@ -5,30 +5,13 @@
 var App = require("../core");
 var _ =  require("underscore");
 var errorHandling = require("./errorHandling");
-var tokens = require("../tokens");
-var config = require("../config").v1;
+var config = require("../config");
 
 module.exports = function() {
-    var matchPipeline = require("./matchPipeline")();
+    var matchPipeline = require("./controllers/matchPipeline")();
 	// Validate token in routine
 	function validateToken(req, res, next) {
 		try {
-			if(!req.headers.api_token) {
-				throw { code: "NO_TOKEN" };
-			}
-
-			if(!req.headers.api_secret) {
-				throw { code: "NO_TOKEN" };
-			}
-
-			if(!tokens[req.headers.api_token]) {
-				throw { code: "INVALID_TOKEN" };
-			}
-
-			if(tokens[req.headers.api_token].secret !== req.headers.api_secret) {
-				throw { code: "INVALID_TOKEN" };
-			}
-
 			next();
 		} catch(e) {
 			errorHandling.handle(e, res);

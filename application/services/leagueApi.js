@@ -1,11 +1,11 @@
 var _ =  require("underscore");
 var moment = require("moment");
-var config = require("../config").v1;
+var config = require("../../config");
 var http = require('request');
 var when = require('when');
 var mongoose = require('mongoose');
-var League = require('./models/League');
-var Match = require('./models/Match');
+var League = require('./../models/League');
+var Match = require('./../models/Match');
 
 
 

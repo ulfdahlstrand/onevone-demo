@@ -1,14 +1,14 @@
 var request = require("request");
 var _ =  require("underscore");
 var moment = require("moment");
-var config = require("../config").v1;
+var config = require("../../config");
 var http = require('request');
 var when = require('when');
 
 function MatchProcessor() {
 	var that = this;
 
-	that.cache = require("./cache")(config.cacheEnabled, config.cacheDuration);
+	//that.cache = require("./cache")(config.cacheEnabled, config.cacheDuration);
 
 	that.processMatches = function(pipelineContainer){
 		var deferred = when.defer();

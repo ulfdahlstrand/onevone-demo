@@ -19,10 +19,6 @@ var App = {
 
 		App.Server = App.Express.listen(process.env.PORT || config.port, function() {
 		    console.log("Listening on port %d", App.Server.address().port);
-
-			console.log("Try the following URLs to demo the API: ");
-			console.log("http://localhost:" + App.Server.address().port + "/1/employees?secret_admin=" + config.v1.adminKey);
-			console.log("http://localhost:" + App.Server.address().port + "/1/employees/2?secret_admin=" + config.v1.adminKey);
 		});
 	}
 };

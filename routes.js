@@ -9,5 +9,5 @@ module.exports = function() {
 	// TODO Standard system routes here like clearing cache
 
 	// v1 routes
-	require("./v1/routes")();
+	require("./application/routes")();
 };
