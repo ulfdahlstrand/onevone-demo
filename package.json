@@ -8,6 +8,7 @@
     "moment": "*",
     "request": "*",
     "underscore": "*",
-    "when": "^3.7.2"
+    "when": "^3.7.2",
+    "mongoose":"*"
   }
 }
