@@ -7,7 +7,7 @@ var when = require('when');
 var pipeline = require('when/pipeline');
 
 var Statistics = require('./../models/Statistics');
-var leagueApi = require('./../services/leagueApi');
+var leagueApi = require('./../../shared/services/leagueApi');
 var lolApi = require('./../services/lolApi');
 var matchProcessor = require('./../services/matchProcessor');
 
