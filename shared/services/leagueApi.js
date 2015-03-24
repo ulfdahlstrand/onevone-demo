@@ -6,6 +6,7 @@ var when = require('when');
 var mongoose = require('mongoose');
 var League = require('./../models/League');
 var Match = require('./../models/Match');
+var Summoner = require('./../models/Summoner');
 
 
 
@@ -35,6 +36,7 @@ function LeagueApi() {
 			return deferred.promise;
 		}
 
+		//League realated methods
 		that.getLeagueById = function(pipelineContainer) {
 			var deferred = when.defer();
 			var statistics = pipelineContainer.statistics;
@@ -74,6 +76,42 @@ function LeagueApi() {
 	    		if(err){ console.log(err); }
 	    		else{
 	    			deferred.resolve(pipelineContainer);
+	    		}
+			});
+
+			return deferred.promise;
+		};
+
+		//Summoner related methods
+		that.getSummonerById = function(summonerId) {
+			var deferred = when.defer();
+
+			Summoner.findOne({"summonerId" : summonerId}, function(err,summoner){
+				if(summoner){
+					deferred.resolve(summoner.data);
+				}else{
+					deferred.resolve(null);
+				}
+				
+			});
+			
+			return deferred.promise;
+		};
+
+		that.saveSummoner = function(lolSummoner){
+			console.log(lolSummoner);
+			var deferred = when.defer();
+			var summoner = new Summoner();
+
+			summoner.summonerId = lolSummoner.id;
+			summoner.name = lolSummoner.name;
+			summoner.data = lolSummoner;
+			summoner.lastUpdated = Date.now();
+
+	    	summoner.save(function (err) {
+	    		if(err){ console.log(err); }
+	    		else{
+	    			deferred.resolve('Success');
 	    		}
 			});
 

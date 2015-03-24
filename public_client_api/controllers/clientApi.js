@@ -16,10 +16,11 @@ function ClientApi() {
 		var deferred = when.defer();
 		//call lol api to get summoner by name 
 
-		//Look for name in cash and return ID if found. 
+		//Look for name in cash
 
+		//If found respond with user
 
-		//If name not in cash
+		//If name not found get from LoL-api respond with user
 		lolApi.retrieveSummoner(summonerName).then(function(body){
 			deferred.resolve(body);
 		});
@@ -29,13 +30,20 @@ function ClientApi() {
 
 	that.retrieveSummonerById = function(summonerId){
 		var deferred = when.defer();
+		leagueApi.getSummonerById(summonerId).then(function(summoner){
+			if(summoner){
+				deferred.resolve(summoner)
+			}else{
+				lolApi.retrieveSummonerWithId(summonerId).then(function(lolSummoner){
+					
+					var strippedSummoner = lolSummoner[summonerId];
+					deferred.resolve(strippedSummoner);
+					leagueApi.saveSummoner(strippedSummoner);
 
-		//Look for Id in cash and return ID if found. 
-
-		//call lol api to get summoner by id 
-		lolApi.retrieveSummonerWithId(summonerId).then(function(body){
-			deferred.resolve(body);
+				});
+			}
 		});
+		
 		return deferred.promise;
 	};
 
@@ -49,6 +57,10 @@ function ClientApi() {
 		deferred.resolve({"league":"test"});
 		return deferred.promise;
 	};
+
+	
+
+
 
 }
 

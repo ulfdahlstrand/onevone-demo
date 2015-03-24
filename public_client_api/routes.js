@@ -9,7 +9,7 @@ module.exports = function() {
 	// Validate token in routine
 	function validateToken(req, res, next) {
 		try {
-			if(!req.headers.api_token) {
+			/*if(!req.headers.api_token) {
 				throw { code: "NO_TOKEN" };
 			}
 
@@ -23,13 +23,12 @@ module.exports = function() {
 
 			if(tokens[req.headers.api_token].secret !== req.headers.api_secret) {
 				throw { code: "INVALID_TOKEN" };
-			}
+			}*/			
 			next();
 		} catch(e) {
 			errorHandling.handle(e, res);
 		}		
 	}
-
 
 	App.Express.get( apiBaseRoute + "/summoner/:id", validateToken, function (req, res) {
 		clientApi.retrieveSummonerById(req.params.id)
