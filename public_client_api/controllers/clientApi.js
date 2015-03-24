@@ -7,7 +7,7 @@ var when = require('when');
 var pipeline = require('when/pipeline');
 
 var leagueApi = require('./../../shared/services/leagueApi');
-var lolApi = require('./../services/lolApi');
+var lolApi = require('./../../shared/services/lolApi');
 
 function ClientApi() {
 	var that = this;
