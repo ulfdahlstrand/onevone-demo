@@ -30,23 +30,6 @@ function LoLApi() {
 	    return deferred.promise; 
 	};
 
-	//Fix recive summoner by iD. 
-
-	that.retrieveSummonerWithId = function(summonerId, _callback) {
-	    var deferred = when.defer();
-	    var url = 'https://eune.api.pvp.net/api/lol/eune/v1.4/summoner/'+summonerId+'?api_key=3fe06ad4-4a6a-4794-9123-d73964ed9a92';
-		
-		request(url, function (error, response, body) {
-			var res = JSON.parse(body);
-			if (!error && response.statusCode == 200) {
-		   		deferred.resolve(res);
-		   		if(_callback){ _callback()};
-		  	}
-		});	
-	    return deferred.promise; 
-	};
-
-
 	that.retrieveSummonerMatches = function(summonerId, _callback) {
 	    var deferred = when.defer();	    
 	    var url = 'https://eune.api.pvp.net/api/lol/eune/v1.3/game/by-summoner/'+summonerId+'/recent?api_key=3fe06ad4-4a6a-4794-9123-d73964ed9a92';

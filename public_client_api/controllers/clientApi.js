@@ -7,6 +7,7 @@ var when = require('when');
 var pipeline = require('when/pipeline');
 
 var leagueApi = require('./../../shared/services/leagueApi');
+var lolApi = require('./../services/lolApi');
 
 function ClientApi() {
 	var that = this;
@@ -15,23 +16,34 @@ function ClientApi() {
 		var deferred = when.defer();
 		//call lol api to get summoner by name 
 
-		//deferred.resolve(pipelineContainer);
-		deferred.resolve({"name":"test"});
+		//Look for name in cash and return ID if found. 
+
+
+		//If name not in cash
+		lolApi.retrieveSummoner(summonerName).then(function(body){
+			deferred.resolve(body);
+		});
+
 		return deferred.promise;
 	};
 
-	that.retrieveSummonerById = function(summonerName){
+	that.retrieveSummonerById = function(summonerId){
 		var deferred = when.defer();
-		//call lol api to get summoner by id 
 
-		//deferred.resolve(pipelineContainer);
-		deferred.resolve({"id":"test"});
+		//Look for Id in cash and return ID if found. 
+
+		//call lol api to get summoner by id 
+		lolApi.retrieveSummonerWithId(summonerId).then(function(body){
+			deferred.resolve(body);
+		});
 		return deferred.promise;
 	};
 
 	that.retrieveSummonerLeagues = function(summonerId){
 		var deferred = when.defer();
 		//call league api to get leagues for summoner id
+
+
 
 		//deferred.resolve(pipelineContainer);
 		deferred.resolve({"league":"test"});
