@@ -9,7 +9,6 @@ var Match = require('./../models/Match');
 var Summoner = require('./../models/Summoner');
 
 
-
 function LeagueApi() {
 	var that = this;
 	mongoose.connect(config.db_connectionString);
@@ -17,20 +16,13 @@ function LeagueApi() {
 	db.on('error', console.error.bind(console, 'connection error:'));
 
 	db.once('open', function (callback) {
-		that.createLeague = function(){
+		
+		that.createLeague = function(leagueName){
 			var deferred = when.defer();
-			
-			var l = new League();
-			var g = new Match();
-
-			g.summonerIds = [ 50208267, 49982720];
-
-			l.name = "test";
-			l.summonerIds = [ 50208267, 49982720];
-			l.matches.push(g);
-
-			l.save(function(err, league){
-				console.log(err);
+			var league = new League();
+			league.name = leagueName;
+			league.save(function(err, createdLeague){
+				deferred.resolve(createdLeague);
 			}); 
 
 			return deferred.promise;
@@ -63,6 +55,33 @@ function LeagueApi() {
 	    	});
 
 			deferred.resolve(pipelineContainer);
+			return deferred.promise;
+		};
+
+		that.getSummonersInActiveLeagues = function(pipelineContainer) {
+			var deferred = when.defer();
+			var statistics = pipelineContainer.statistics;
+			var updateLimit = new Date(Date.now() - 5 * 60 * 1000);
+		    League.aggregate([
+		    	{ $match: {lastUpdated: { $lt: updateLimit}}}, //replace this code with checking for none finished leagues
+		        { $unwind: "$summonerIds" },
+		        { $project : { summonerIds : 1, _id: 0 } },
+		        { $group: {_id: "$summonerIds" }}
+		    ], function (err, result) {
+		        var summoners = [];
+		        if (err) {
+		            console.log(err);
+		        }
+		        else{
+		        	summoners = result;
+		        }
+		        pipelineContainer.summonersInActiveLeagues = summoners;
+
+		        deferred.resolve(pipelineContainer);
+		        
+		    });
+
+
 			return deferred.promise;
 		};
 

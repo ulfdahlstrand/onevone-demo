@@ -43,4 +43,11 @@ module.exports = function() {
 			});
 	});
 
+	App.Express.get( apiBaseRoute + "/league/update", validateToken, function (req, res) {
+		matchPipeline.updateLeagues()
+			.then(function(response) {
+				res.send(response);
+			});
+	});
+
 };

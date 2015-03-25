@@ -34,6 +34,20 @@ function MatchPipeline() {
 		return pipeline(executionOrder, pipelineContainer);
 	};
 
+	that.updateLeagues = function(){
+	    
+	    var pipelineContainer = {};
+	    pipelineContainer.statistics = Statistics();
+
+	    var executionOrder = [
+			leagueApi.getSummonersInActiveLeagues
+	    ];
+
+		return pipeline(executionOrder, pipelineContainer);
+	};
+
+	
+
 	that.processStatistics = function(pipelineContainer){
 		var deferred = when.defer();
 		var statistics = pipelineContainer.statistics;
