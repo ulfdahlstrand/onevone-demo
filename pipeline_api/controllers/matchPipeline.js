@@ -10,6 +10,7 @@ var Statistics = require('./../models/Statistics');
 var leagueApi = require('./../../shared/services/leagueApi');
 var lolApi = require('./../../shared/services/lolApi');
 var matchProcessor = require('./../services/matchProcessor');
+var recentMatchService = require('./../services/recentMatchService');
 
 function MatchPipeline() {
 	var that = this;
@@ -21,10 +22,9 @@ function MatchPipeline() {
 	    var pipelineContainer = {};
 	    pipelineContainer.leagueId = leagueId;
 	    pipelineContainer.statistics = Statistics();
-
 	    var executionOrder = [
 	    	leagueApi.getLeagueById,
-	    	lolApi.retrieveResentMatchesforSummoners,
+	    	recentMatchService.retrieveResentMatchesforSummoners,
 	    	matchProcessor.processMatches,
 	    	leagueApi.updateLeagueWithMatchResults,
 	    	leagueApi.saveLeague,

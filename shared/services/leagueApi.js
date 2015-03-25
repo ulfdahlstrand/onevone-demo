@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var League = require('./../models/League');
 var Match = require('./../models/Match');
 var Summoner = require('./../models/Summoner');
+var RecentGame = require('./../models/RecentGame');
 
 
 function LeagueApi() {
@@ -58,6 +59,22 @@ function LeagueApi() {
 			return deferred.promise;
 		};
 
+		that.saveLeague = function(pipelineContainer){
+			var deferred = when.defer();
+			var league = pipelineContainer.league;
+			var statistics = pipelineContainer.statistics;
+			
+			league.lastUpdated = Date.now();
+	    	league.save(function (err) {
+	    		if(err){ console.log(err); }
+	    		else{
+	    			deferred.resolve(pipelineContainer);
+	    		}
+			});
+
+			return deferred.promise;
+		};
+
 		that.getSummonersInActiveLeagues = function(pipelineContainer) {
 			var deferred = when.defer();
 			var statistics = pipelineContainer.statistics;
@@ -73,28 +90,43 @@ function LeagueApi() {
 		            console.log(err);
 		        }
 		        else{
-		        	summoners = result;
+		        	result.forEach(function(row){
+		        		summoners.push(row._id);
+		        	});
 		        }
 		        pipelineContainer.summonersInActiveLeagues = summoners;
 
 		        deferred.resolve(pipelineContainer);
 		        
 		    });
-
-
 			return deferred.promise;
 		};
 
-		that.saveLeague = function(pipelineContainer){
+		that.getSummonersToUpdate = function(pipelineContainer){
 			var deferred = when.defer();
 			var league = pipelineContainer.league;
 			var statistics = pipelineContainer.statistics;
 			
-			league.lastUpdated = Date.now();
-	    	league.save(function (err) {
+			// get summoners to 
+			deferred.resolve(pipelineContainer);
+	    	
+			return deferred.promise;
+		};
+
+
+		//TODO: move this to be a static method on ercentgame mongoose object instead
+		that.saveRecentGame = function(lolRecentGame){
+			var deferred = when.defer();
+			var recentGame = new RecentGame();
+
+			recentGame.summonerId = lolSummoner.id;
+			recentGame.data = lolSummoner;
+			recentGame.lastUpdated = Date.now();
+
+	    	recentGame.save(function (err) {
 	    		if(err){ console.log(err); }
 	    		else{
-	    			deferred.resolve(pipelineContainer);
+	    			deferred.resolve('Success');
 	    		}
 			});
 
@@ -117,6 +149,7 @@ function LeagueApi() {
 			return deferred.promise;
 		};
 
+		//TODO: move this to be a static method on summoner mongoose object instead
 		that.saveSummoner = function(lolSummoner){
 			console.log(lolSummoner);
 			var deferred = when.defer();

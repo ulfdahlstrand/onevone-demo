@@ -62,29 +62,6 @@ function LoLApi() {
 	    return deferred.promise; 
 	};
 
-	//add a wrapper for a list of
-
-	that.retrieveResentMatchesforSummoners = function(pipelineContainer){
-		var deferred = when.defer();
-		var deferreds = [];
-		var statistics = pipelineContainer.statistics;
-		
-		pipelineContainer.recentMatches = [];
-		pipelineContainer.league.summonerIds.forEach(function(summonerId) {
-			var matchpromise = that.retrieveSummonerMatches(summonerId, statistics.incrementLolApiCalls)
-			.then(function(matches) {
-				pipelineContainer.recentMatches.push(matches);
-			});
-			deferreds.push(matchpromise);
-			statistics.incrementSummonersItterated();
-		});
-
-		when.all(deferreds).then(function(){
-			deferred.resolve(pipelineContainer);
-		});	
-		return deferred.promise; 
-	};
-
 }
 
 module.exports = new LoLApi();
