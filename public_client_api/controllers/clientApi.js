@@ -31,7 +31,8 @@ function ClientApi() {
 	that.retrieveSummonerById = function(summonerId){
 		var deferred = when.defer();
 		leagueApi.getSummonerById(summonerId).then(function(summoner){
-			if(summoner){
+            if (summoner) {
+                console.log('Summoner found in DB')
 				deferred.resolve(summoner)
 			}else{
 				lolApi.retrieveSummonerWithId(summonerId).then(function(lolSummoner){
