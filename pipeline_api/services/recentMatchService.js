@@ -11,10 +11,6 @@ var leagueApi = require('./../../shared/services/leagueApi');
 function RecentMatchService() {
 	var that = this;
 
-	//add method for getting recent matches from db
-	//add method to get recent matches from lol
-	//add method to determine which matches that needs to be updated
-
 	that.getRecentGamesForSummonersInDb = function(pipelineContainer){
 		var deferred = when.defer();
 		var statistics = pipelineContainer.statistics;

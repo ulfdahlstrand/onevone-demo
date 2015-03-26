@@ -59,25 +59,8 @@ function LeagueApi() {
 			return deferred.promise;
 		};
 
-		that.saveLeague = function(pipelineContainer){
+		that.getSummonersInActiveTournament = function() {
 			var deferred = when.defer();
-			var league = pipelineContainer.league;
-			var statistics = pipelineContainer.statistics;
-			
-			league.lastUpdated = Date.now();
-	    	league.save(function (err) {
-	    		if(err){ console.log(err); }
-	    		else{
-	    			deferred.resolve(pipelineContainer);
-	    		}
-			});
-
-			return deferred.promise;
-		};
-
-		that.getSummonersInActiveLeagues = function(pipelineContainer) {
-			var deferred = when.defer();
-			var statistics = pipelineContainer.statistics;
 			var updateLimit = new Date(Date.now() - 5 * 60 * 1000);
 		    League.aggregate([
 		    	{ $match: {lastUpdated: { $lt: updateLimit}}}, //replace this code with checking for none finished leagues
@@ -94,9 +77,7 @@ function LeagueApi() {
 		        		summoners.push(row._id);
 		        	});
 		        }
-		        pipelineContainer.summonersInActiveLeagues = summoners;
-
-		        deferred.resolve(pipelineContainer);
+		        deferred.resolve(summoners);
 		        
 		    });
 			return deferred.promise;
