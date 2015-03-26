@@ -30,6 +30,8 @@ function LeagueApi() {
 		}
 
 		//League realated methods
+
+		//TODO: break up and rename to tournament
 		that.getLeagueById = function(pipelineContainer) {
 			var deferred = when.defer();
 			var statistics = pipelineContainer.statistics;
@@ -43,6 +45,7 @@ function LeagueApi() {
 			return deferred.promise;
 		};
 
+		//TODO: break up and rename to tournament
 		that.updateLeagueWithMatchResults = function(pipelineContainer){
 			var deferred = when.defer();
 			var league = pipelineContainer.league;
