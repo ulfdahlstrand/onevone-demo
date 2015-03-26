@@ -40,7 +40,9 @@ function MatchPipeline() {
 	    pipelineContainer.statistics = Statistics();
 
 	    var executionOrder = [
-			leagueApi.getSummonersInActiveLeagues
+			leagueApi.getSummonersInActiveLeagues,
+			recentMatchService.getRecentGamesForSummonersInDb,
+			recentMatchService.getRecentGamesForSummonersNotInDb
 	    ];
 
 		return pipeline(executionOrder, pipelineContainer);

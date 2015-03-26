@@ -20,11 +20,15 @@ function LoLApi() {
 	    var deferred = when.defer();
 	    var url = 'https://eune.api.pvp.net/api/lol/eune/v1.4/summoner/by-name/'+summonerName+'?api_key=3fe06ad4-4a6a-4794-9123-d73964ed9a92';
 		
-		request(url, function (error, response, body) {
-			var res = JSON.parse(body);
+		request(url, function (error, response, body) {		
 			if (!error && response.statusCode == 200) {
+				var res = JSON.parse(body);
 		   		deferred.resolve(res);
 		   		if(_callback){ _callback()};
+		  	}
+		  	else{
+		  		deferred.resolve();
+		  		console.log(error);
 		  	}
 		});	
 	    return deferred.promise; 
@@ -36,11 +40,15 @@ function LoLApi() {
 	    var deferred = when.defer();
 	    var url = 'https://eune.api.pvp.net/api/lol/eune/v1.4/summoner/'+summonerId+'?api_key=3fe06ad4-4a6a-4794-9123-d73964ed9a92';
 		
-		request(url, function (error, response, body) {
-			var res = JSON.parse(body);
+		request(url, function (error, response, body) {	
 			if (!error && response.statusCode == 200) {
+				var res = JSON.parse(body);
 		   		deferred.resolve(res);
 		   		if(_callback){ _callback()};
+		  	}
+		  	else{
+		  		deferred.resolve();
+		  		console.log(error);
 		  	}
 		});	
 	    return deferred.promise; 
@@ -51,12 +59,15 @@ function LoLApi() {
 	    var deferred = when.defer();	    
 	    var url = 'https://eune.api.pvp.net/api/lol/eune/v1.3/game/by-summoner/'+summonerId+'/recent?api_key=3fe06ad4-4a6a-4794-9123-d73964ed9a92';
 		
-		
 		request(url, function (error, response, body) {
-			var res = JSON.parse(body);
 			if (!error && response.statusCode == 200) {
+				var res = JSON.parse(body);
 		   		deferred.resolve(res);
 		   		if(_callback){ _callback()};
+		  	}
+		  	else{
+		  		deferred.resolve();
+		  		console.log(error);
 		  	}
 		});	
 	    return deferred.promise; 

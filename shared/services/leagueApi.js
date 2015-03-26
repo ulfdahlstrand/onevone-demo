@@ -102,14 +102,17 @@ function LeagueApi() {
 			return deferred.promise;
 		};
 
-		that.getSummonersToUpdate = function(pipelineContainer){
+		that.getRecentGamesForSummoners = function(summonerIds){
 			var deferred = when.defer();
-			var league = pipelineContainer.league;
-			var statistics = pipelineContainer.statistics;
-			
-			// get summoners to 
-			deferred.resolve(pipelineContainer);
-	    	
+
+			RecentGame.find({ summonerId: { $in: summonerIds }}, function(err, matches){
+				var res = [];
+				if(!err){
+					res = matches;
+				}
+
+				deferred.resolve(res);
+			});
 			return deferred.promise;
 		};
 
@@ -117,19 +120,15 @@ function LeagueApi() {
 		//TODO: move this to be a static method on ercentgame mongoose object instead
 		that.saveRecentGame = function(lolRecentGame){
 			var deferred = when.defer();
-			var recentGame = new RecentGame();
-
-			recentGame.summonerId = lolSummoner.id;
-			recentGame.data = lolSummoner;
-			recentGame.lastUpdated = Date.now();
-
-	    	recentGame.save(function (err) {
-	    		if(err){ console.log(err); }
-	    		else{
-	    			deferred.resolve('Success');
-	    		}
-			});
-
+			RecentGame.update({ summonerId: lolRecentGame.summonerId }, 
+				{ $set: 
+					{ 
+						data: lolRecentGame, 
+						lastUpdated: Date.now() 
+					} 
+				}, 
+				{ upsert: true }, 
+				function(){});
 			return deferred.promise;
 		};
 
