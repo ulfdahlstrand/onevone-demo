@@ -13,15 +13,47 @@ var League = require('./../../shared/models/League');
 function TournamentService() {
 	var that = this;
 
+
+	that.getTournamentById = function(pipelineContainer) {
+		var deferred = when.defer();
+		var statistics = pipelineContainer.statistics;
+		
+		leagueApi.getTournamentById(pipelineContainer.leagueId)
+		.then(function(tournamnet){
+			pipelineContainer.league = tournamnet;
+			deferred.resolve(pipelineContainer);
+			statistics.incrementLeaguesItterated();
+		});
+
+		return deferred.promise;
+	};
+
 	that.getSummonersInActiveTournament = function(pipelineContainer) {
 		var deferred = when.defer();
 		var statistics = pipelineContainer.statistics;
 
-		leagueApi.getSummonersInActiveTournament().then(function(summoners){
+		leagueApi.getSummonersInActiveTournament()
+		.then(function(summoners){
 			pipelineContainer.summonersInActiveLeagues = summoners;
 	        deferred.resolve(pipelineContainer);
 		});
 
+		return deferred.promise;
+	};
+
+	that.updateTournamentWithMatchResults = function(pipelineContainer){
+		var deferred = when.defer();
+		var league = pipelineContainer.league;
+		var validMatches = pipelineContainer.validMatches;
+		var statistics = pipelineContainer.statistics;
+
+		league.matches.forEach(function(match){
+    		if(!match.hasBeenPlayed){
+	    		match.updateMatchFromPlayedMatches(validMatches, statistics.incrementUpdatedGames);
+    		}
+    	});
+
+		deferred.resolve(pipelineContainer);
 		return deferred.promise;
 	};
 

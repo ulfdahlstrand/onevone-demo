@@ -24,10 +24,10 @@ function MatchPipeline() {
 	    pipelineContainer.leagueId = leagueId;
 	    pipelineContainer.statistics = Statistics();
 	    var executionOrder = [
-	    	leagueApi.getLeagueById,
+	    	tournamentService.getTournamentById,
 	    	recentMatchService.retrieveResentMatchesforSummoners,
 	    	matchProcessor.processMatches,
-	    	leagueApi.updateLeagueWithMatchResults,
+	    	tournamentService.updateTournamentWithMatchResults,
 	    	tournamentService.saveTournament,
 	    	that.processStatistics
 	    ];

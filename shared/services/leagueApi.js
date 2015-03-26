@@ -17,51 +17,30 @@ function LeagueApi() {
 	db.on('error', console.error.bind(console, 'connection error:'));
 
 	db.once('open', function (callback) {
-		
-		that.createLeague = function(leagueName){
+
+		//Tournament realated methods		
+		that.createTournament = function(tournamentName){
 			var deferred = when.defer();
-			var league = new League();
-			league.name = leagueName;
-			league.save(function(err, createdLeague){
-				deferred.resolve(createdLeague);
+			var tournament = new League();
+			tournament.name = tournamentName;
+			tournament.save(function(err, createdTournament){
+				deferred.resolve(createdTournament);
 			}); 
 
 			return deferred.promise;
 		}
 
-		//League realated methods
-
-		//TODO: break up and rename to tournament
-		that.getLeagueById = function(pipelineContainer) {
+		that.getTournamentById = function(tournamentId) {
 			var deferred = when.defer();
-			var statistics = pipelineContainer.statistics;
 
-			League.findOne({"_id" : pipelineContainer.leagueId}, function(err,league){
-				pipelineContainer.league = league;
-				deferred.resolve(pipelineContainer);
-				statistics.incrementLeaguesItterated();
+			League.findOne({"_id" : tournamentId}, function(err,tournament){
+				deferred.resolve(tournament);
 			});
 			
 			return deferred.promise;
 		};
 
-		//TODO: break up and rename to tournament
-		that.updateLeagueWithMatchResults = function(pipelineContainer){
-			var deferred = when.defer();
-			var league = pipelineContainer.league;
-			var validMatches = pipelineContainer.validMatches;
-			var statistics = pipelineContainer.statistics;
-
-			league.matches.forEach(function(match){
-	    		if(!match.hasBeenPlayed){
-		    		match.updateMatchFromPlayedMatches(validMatches, statistics.incrementUpdatedGames);
-	    		}
-	    	});
-
-			deferred.resolve(pipelineContainer);
-			return deferred.promise;
-		};
-
+		//TODO: add filter for active matches
 		that.getSummonersInActiveTournament = function() {
 			var deferred = when.defer();
 			var updateLimit = new Date(Date.now() - 5 * 60 * 1000);
@@ -101,7 +80,6 @@ function LeagueApi() {
 		};
 
 
-		//TODO: move this to be a static method on ercentgame mongoose object instead
 		that.saveRecentGame = function(lolRecentGame){
 			var deferred = when.defer();
 			RecentGame.update({ summonerId: lolRecentGame.summonerId }, 
@@ -132,7 +110,6 @@ function LeagueApi() {
 			return deferred.promise;
 		};
 
-		//TODO: move this to be a static method on summoner mongoose object instead
 		that.saveSummoner = function(lolSummoner){
 			console.log(lolSummoner);
 			var deferred = when.defer();
