@@ -65,16 +65,19 @@ function RecentMatchService() {
 		var statistics = pipelineContainer.statistics;
 		
 		pipelineContainer.recentMatches = [];
-		pipelineContainer.league.summonerIds.forEach(function(summonerId) {
-			var matchpromise = lolApi.retrieveSummonerMatches(summonerId, statistics.incrementLolApiCalls)
-			.then(function(matches) {
-				if(matches){
-					pipelineContainer.recentMatches.push(matches);
-					leagueApi.saveRecentGame(matches);
-				}
+
+		pipelineContainer.activeTournaments.forEach(function(tournament){
+			tournament.summonerIds.forEach(function(summonerId) {
+				var matchpromise = lolApi.retrieveSummonerMatches(summonerId, statistics.incrementLolApiCalls)
+				.then(function(matches) {
+					if(matches){
+						pipelineContainer.recentMatches.push(matches);
+						leagueApi.saveRecentGame(matches);
+					}
+				});
+				deferreds.push(matchpromise);
+				statistics.incrementSummonersItterated();
 			});
-			deferreds.push(matchpromise);
-			statistics.incrementSummonersItterated();
 		});
 
 		when.all(deferreds).then(function(){

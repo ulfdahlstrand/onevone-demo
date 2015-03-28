@@ -28,7 +28,7 @@ function MatchPipeline() {
 	    	recentMatchService.retrieveResentMatchesforSummoners,
 	    	matchProcessor.processMatches,
 	    	tournamentService.updateTournamentWithMatchResults,
-	    	tournamentService.saveTournament,
+	    	tournamentService.saveTournaments,
 	    	that.processStatistics
 	    ];
 
@@ -41,9 +41,14 @@ function MatchPipeline() {
 	    pipelineContainer.statistics = Statistics();
 
 	    var executionOrder = [
+			tournamentService.getActiveTournaments,
 			tournamentService.getSummonersInActiveTournament,
 			recentMatchService.getRecentGamesForSummonersInDb,
-			recentMatchService.getRecentGamesForSummonersNotInDb
+			recentMatchService.getRecentGamesForSummonersNotInDb,
+			matchProcessor.processMatches,
+	    	tournamentService.updateTournamentWithMatchResults,
+	    	tournamentService.saveTournaments,
+	    	that.processStatistics
 	    ];
 
 		return pipeline(executionOrder, pipelineContainer);

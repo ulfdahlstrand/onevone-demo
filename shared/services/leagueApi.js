@@ -65,6 +65,20 @@ function LeagueApi() {
 			return deferred.promise;
 		};
 
+		that.getActiveTournaments = function(){
+			var deferred = when.defer();
+			var updateLimit = new Date(Date.now() - 5 * 60 * 1000);
+			League.find({lastUpdated: { $lt: updateLimit},}, function(err, tournament){
+				var res = [];
+				if(!err){
+					res = tournament;
+				}
+
+				deferred.resolve(res);
+			});
+			return deferred.promise;
+		};
+
 		that.getRecentGamesForSummoners = function(summonerIds){
 			var deferred = when.defer();
 
