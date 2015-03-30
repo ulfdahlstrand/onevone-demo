@@ -14,15 +14,19 @@ function ClientApi() {
 
 	that.retrieveSummonerByName = function(summonerName){
 		var deferred = when.defer();
-		//call lol api to get summoner by name 
-
-		//Look for name in cash
-
-		//If found respond with user
-
-		//If name not found get from LoL-api respond with user
-		lolApi.retrieveSummoner(summonerName).then(function(body){
-			deferred.resolve(body);
+		summonerName = summonerName.toLowerCase();
+		leagueApi.getSummonerByName(summonerName).then(function(summoner){
+            if (summoner) {
+                console.log('Summoner found in DB')
+				deferred.resolve(summoner)
+			}else{
+				lolApi.retrieveSummoner(summonerName).then(function(lolSummoner){
+					var strippedSummoner = lolSummoner[summonerName];
+					strippedSummoner.name = strippedSummoner.name.toLowerCase();
+					deferred.resolve(strippedSummoner);
+					leagueApi.saveSummoner(strippedSummoner);
+				});
+			}
 		});
 
 		return deferred.promise;

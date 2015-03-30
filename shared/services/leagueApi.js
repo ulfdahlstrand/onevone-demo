@@ -124,22 +124,33 @@ function LeagueApi() {
 			return deferred.promise;
 		};
 
-		that.saveSummoner = function(lolSummoner){
-			console.log(lolSummoner);
+		that.getSummonerByName = function(summonerName) {
 			var deferred = when.defer();
-			var summoner = new Summoner();
 
-			summoner.summonerId = lolSummoner.id;
-			summoner.name = lolSummoner.name;
-			summoner.data = lolSummoner;
-			summoner.lastUpdated = Date.now();
-
-	    	summoner.save(function (err) {
-	    		if(err){ console.log(err); }
-	    		else{
-	    			deferred.resolve('Success');
-	    		}
+			Summoner.findOne({"name" : summonerName}, function(err,summoner){
+				if(summoner){
+					deferred.resolve(summoner.data);
+				}else{
+					deferred.resolve(null);
+				}
+				
 			});
+			
+			return deferred.promise;
+		};
+
+		that.saveSummoner = function(summoner){
+			var deferred = when.defer();
+			Summoner.update({ summonerId: summoner.id }, 
+				{ $set: 
+					{ 
+						name: summoner.name,
+						data: summoner, 
+						lastUpdated: Date.now() 
+					} 
+				}, 
+				{ upsert: true }, 
+				function(){});
 
 			return deferred.promise;
 		};
