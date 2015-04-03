@@ -51,4 +51,11 @@ module.exports = function() {
 			});
 	});
 
+	App.Express.get( apiBaseRoute + "/tournament/:id", validateToken, function (req, res) {
+		clientApi.getTournamentById(req.params.id)
+			.then(function(response) {
+				res.send(response);
+			});
+	});
+
 };

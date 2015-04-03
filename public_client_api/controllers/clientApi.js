@@ -63,7 +63,19 @@ function ClientApi() {
 		return deferred.promise;
 	};
 
-	
+	that.getTournamentById = function(tournamentId){
+		var deferred = when.defer();
+		//call league api to get leagues for summoner id
+
+		leagueApi.getTournamentById(tournamentId).then(function(tournament){
+            if (tournament) {
+                console.log('Tournament found in DB')
+				deferred.resolve(tournament)
+			}
+		});
+
+		return deferred.promise;
+	};
 
 
 
