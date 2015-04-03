@@ -28,6 +28,13 @@ matchSchema.statics.mapFromLolMatch = function (summonerId, game) {
 	return match;
 }
 
+matchSchema.statics.mapFromListOfSummoners = function (summonerIds) {
+	var match = new Match();
+	match.summonerIds = summonerIds;
+	
+	return match;
+}
+
 matchSchema.methods.addWin = function(summonerId){
 	if(this.winners.indexOf(summonerId) < 0){
 		this.winners.push(summonerId);

@@ -19,16 +19,70 @@ function LeagueApi() {
 	db.once('open', function (callback) {
 
 		//Tournament realated methods		
-		that.createTournament = function(tournamentName){
+		that.createTournament = function(tournamentName, summoners){
 			var deferred = when.defer();
 			var tournament = new League();
 			tournament.name = tournamentName;
+			tournament.summonerIds	 = summoners;
 			tournament.save(function(err, createdTournament){
 				deferred.resolve(createdTournament);
 			}); 
 
 			return deferred.promise;
 		}
+
+		function allPossibleCases(arr) {
+		  if (arr.length == 1) {
+		    return arr[0];
+		  } else {
+		    var results = [];
+		    
+		    for(var i = 0; i < arr.length; i++){
+		    	for(var j = 0; j < arr.length; j++){
+		    		if(i > j){
+		    			var result = [arr[i], arr[j]]; 
+		    			results.push(result);
+		    		}
+		    	}
+		    }
+
+		    return results;
+		  }
+
+		}
+
+		that.startTournament = function(tournamentId){
+			var deferred = when.defer();
+
+			that.getTournamentById(tournamentId).then(function(tournament){
+
+				var summonerIds = tournament.summonerIds;
+
+				var allMatches = allPossibleCases(summonerIds); 
+				var matches = [];
+
+				allMatches.forEach(function(summoners){
+					var match = Match.mapFromListOfSummoners(summoners);
+					matches.push(match);
+				});
+
+				League.update({ _id: tournamentId }, 
+					{ $set: 
+						{ 
+							startedDate: Date.now(),
+							matches: matches
+						} 
+					}, 
+					{ upsert: true }, 
+					function(){
+						deferred.resolve();
+					});
+
+			});
+
+			return deferred.promise;
+		}
+		
 
 		that.getTournamentById = function(tournamentId) {
 			var deferred = when.defer();

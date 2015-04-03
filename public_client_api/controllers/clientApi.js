@@ -77,7 +77,27 @@ function ClientApi() {
 		return deferred.promise;
 	};
 
+	that.createTournament = function(tournamentName, summoners){
+		var deferred = when.defer();
+		//call league api to get leagues for summoner id
+		leagueApi.createTournament(tournamentName, summoners).then(function(tournament){
+            if (tournament) {
+				deferred.resolve(tournament);
+			}
+		});
 
+		return deferred.promise;
+	};
+
+	that.startTournament = function(tournamentId){
+		var deferred = when.defer();
+		//call league api to get leagues for summoner id
+		leagueApi.startTournament(tournamentId).then(function(){
+				deferred.resolve();
+		});
+
+		return deferred.promise;
+	};
 
 }
 

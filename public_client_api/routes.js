@@ -51,11 +51,26 @@ module.exports = function() {
 			});
 	});
 
+	App.Express.post( apiBaseRoute + "/tournament/create", validateToken, function (req, res) {
+		clientApi.createTournament(req.body.tournamentName, req.body.summoners)
+			.then(function(response) {
+				res.send(response);
+			});
+	});
+
+	App.Express.get( apiBaseRoute + "/tournament/:id/start", validateToken, function (req, res) {
+		clientApi.startTournament(req.params.id)
+			.then(function(response) {
+				res.send(response);
+			});
+	});
+
 	App.Express.get( apiBaseRoute + "/tournament/:id", validateToken, function (req, res) {
 		clientApi.getTournamentById(req.params.id)
 			.then(function(response) {
 				res.send(response);
 			});
 	});
+
 
 };
