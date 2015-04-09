@@ -1,5 +1,6 @@
 var App = require("../core");
 var _ =  require("underscore");
+var cors = require('cors')
 var errorHandling = require("./errorHandling");
 var tokens = require("../tokens");
 var config = require("../config");
@@ -30,6 +31,8 @@ module.exports = function() {
 		}		
 	}
 
+	App.Express.use(cors());
+
 	App.Express.get( apiBaseRoute + "/summoner/:id", validateToken, function (req, res) {
 		clientApi.retrieveSummonerById(req.params.id)
 			.then(function(response) {
@@ -37,8 +40,8 @@ module.exports = function() {
 			});
 	});
 
-	App.Express.get( apiBaseRoute + "/summoner/:id/matches", validateToken, function (req, res) {
-		clientApi.retrieveSummonerLeagues(req.params.id)
+	App.Express.get( apiBaseRoute + "/summoner/:id/tournaments", validateToken, function (req, res) {
+		clientApi.retrieveSummonerTournaments(req.params.id)
 			.then(function(response) {
 				res.send(response);
 			});

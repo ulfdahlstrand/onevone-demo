@@ -21,10 +21,12 @@ function ClientApi() {
 				deferred.resolve(summoner)
 			}else{
 				lolApi.retrieveSummoner(summonerName).then(function(lolSummoner){
-					var strippedSummoner = lolSummoner[summonerName];
-					strippedSummoner.name = strippedSummoner.name.toLowerCase();
-					deferred.resolve(strippedSummoner);
-					leagueApi.saveSummoner(strippedSummoner);
+					if(lolSummoner){
+						var strippedSummoner = lolSummoner[summonerName];
+						strippedSummoner.name = strippedSummoner.name.toLowerCase();
+						deferred.resolve(strippedSummoner);
+						leagueApi.saveSummoner(strippedSummoner);
+					}
 				});
 			}
 		});
@@ -52,14 +54,16 @@ function ClientApi() {
 		return deferred.promise;
 	};
 
-	that.retrieveSummonerLeagues = function(summonerId){
+	that.retrieveSummonerTournaments = function(summonerId){
 		var deferred = when.defer();
 		//call league api to get leagues for summoner id
 
 
-
-		//deferred.resolve(pipelineContainer);
-		deferred.resolve({"league":"test"});
+		leagueApi.getTournamentsForSummoner(summonerId).then(function(tournaments){
+            if (tournaments) {
+				deferred.resolve(tournaments)
+			}
+		});
 		return deferred.promise;
 	};
 
@@ -79,8 +83,8 @@ function ClientApi() {
 
 	that.createTournament = function(tournamentName, summoners){
 		var deferred = when.defer();
-		//call league api to get leagues for summoner id
-		leagueApi.createTournament(tournamentName, summoners).then(function(tournament){
+		leagueApi.createTournament(tournamentName, summoners)
+		.then(function(tournament){
             if (tournament) {
 				deferred.resolve(tournament);
 			}
@@ -92,8 +96,9 @@ function ClientApi() {
 	that.startTournament = function(tournamentId){
 		var deferred = when.defer();
 		//call league api to get leagues for summoner id
-		leagueApi.startTournament(tournamentId).then(function(){
-				deferred.resolve();
+		leagueApi.startTournament(tournamentId)
+		.then(function(result){
+			deferred.resolve(result);
 		});
 
 		return deferred.promise;

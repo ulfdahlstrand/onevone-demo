@@ -6,7 +6,7 @@ var leagueSchema = mongoose.Schema({
     summonerIds: [Number],
     matches: [Match.schema],
     numberOfUnplayedMatches: Number,
-    lastUpdated: { type: Date, default: Date.now },
+    lastUpdated: { type: Date },
     startedDate: { type: Date }
 });
 

@@ -4,11 +4,12 @@
   "private": true,
   "dependencies": {
     "body-parser": "~1.2.0",
+    "cors": "^2.5.3",
     "express": "4.x",
     "moment": "*",
+    "mongoose": "*",
     "request": "*",
     "underscore": "*",
-    "when": "^3.7.2",
-    "mongoose":"*"
+    "when": "^3.7.2"
   }
 }

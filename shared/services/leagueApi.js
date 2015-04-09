@@ -8,6 +8,7 @@ var League = require('./../models/League');
 var Match = require('./../models/Match');
 var Summoner = require('./../models/Summoner');
 var RecentGame = require('./../models/RecentGame');
+var MatchHelper = require('./../helpers/MatchHelper');
 
 
 function LeagueApi() {
@@ -31,26 +32,6 @@ function LeagueApi() {
 			return deferred.promise;
 		}
 
-		function allPossibleCases(arr) {
-		  if (arr.length == 1) {
-		    return arr[0];
-		  } else {
-		    var results = [];
-		    
-		    for(var i = 0; i < arr.length; i++){
-		    	for(var j = 0; j < arr.length; j++){
-		    		if(i > j){
-		    			var result = [arr[i], arr[j]]; 
-		    			results.push(result);
-		    		}
-		    	}
-		    }
-
-		    return results;
-		  }
-
-		}
-
 		that.startTournament = function(tournamentId){
 			var deferred = when.defer();
 
@@ -58,7 +39,7 @@ function LeagueApi() {
 
 				var summonerIds = tournament.summonerIds;
 
-				var allMatches = allPossibleCases(summonerIds); 
+				var allMatches = MatchHelper.allPossibleCases(summonerIds); 
 				var matches = [];
 
 				allMatches.forEach(function(summoners){
@@ -75,7 +56,7 @@ function LeagueApi() {
 					}, 
 					{ upsert: true }, 
 					function(){
-						deferred.resolve();
+						deferred.resolve({});
 					});
 
 			});
@@ -91,6 +72,20 @@ function LeagueApi() {
 				deferred.resolve(tournament);
 			});
 			
+			return deferred.promise;
+		};
+
+		that.getTournamentsForSummoner = function(summonerId){
+			var deferred = when.defer();
+			League.find({ summonerIds: { $elemMatch:{ $eq: summonerId} }}, function(err, tournaments){
+				var res = [];
+				console.log(err);
+				if(!err){
+					res = tournaments;
+				}
+
+				deferred.resolve(res);
+			});
 			return deferred.promise;
 		};
 
