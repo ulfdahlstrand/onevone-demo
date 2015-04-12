@@ -62,10 +62,10 @@ function TournamentService() {
 		var validMatches = pipelineContainer.validMatches;
 		var statistics = pipelineContainer.statistics;
 		var numberOfUnplayedMatches = 0;
-
 		activeTournaments.forEach(function(league){
 			league.matches.forEach(function(match){
 	    		if(!match.hasBeenPlayed){
+	    		
 		    		match.updateMatchFromPlayedMatches(validMatches, statistics.incrementUpdatedGames);
 	    		}
 

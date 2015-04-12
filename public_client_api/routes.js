@@ -61,6 +61,13 @@ module.exports = function() {
 			});
 	});
 
+	App.Express.get( apiBaseRoute + "/tournament/:id/standings", validateToken, function (req, res) {
+		clientApi.getStandingsInTournament(req.params.id)
+			.then(function(response) {
+				res.send(response);
+			});
+	});
+
 	App.Express.get( apiBaseRoute + "/tournament/:id/start", validateToken, function (req, res) {
 		clientApi.startTournament(req.params.id)
 			.then(function(response) {

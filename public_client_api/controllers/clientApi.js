@@ -81,6 +81,46 @@ function ClientApi() {
 		return deferred.promise;
 	};
 
+	that.getStandingsInTournament = function(tournamentId){
+		var deferred = when.defer();
+		//call league api to get leagues for summoner id
+
+		var standingsForSummoner = {};
+
+
+		leagueApi.getStandingsInTournament(tournamentId).then(function(standings){
+            if (standings) {
+            	standings.forEach(function(standing){
+            		var summonerId = standing.summonerIds;
+            		var standingForSummoner = standingsForSummoner[summonerId];
+            		console.log(standingForSummoner);
+            		if(!standingForSummoner){
+            			var newStanding = {
+            				summonerId: summonerId,
+            				wins: 0,
+            				loses: 0
+            			};
+            			standingForSummoner = newStanding;
+            			standingsForSummoner[summonerId] = newStanding; 
+            		}
+
+            		if(standing.matches.winners === summonerId){
+            			standingForSummoner.wins += 1;
+            		}
+
+            		if(standing.matches.losers === summonerId){
+            			standingForSummoner.loses += 1;
+            		}
+            	});
+
+            	var sortedStandings = _.sortBy(standingsForSummoner, function(standing){ return -standing.wins; });
+				deferred.resolve(sortedStandings);
+			}
+		});
+
+		return deferred.promise;
+	};
+
 	that.createTournament = function(tournamentName, summoners){
 		var deferred = when.defer();
 		leagueApi.createTournament(tournamentName, summoners)

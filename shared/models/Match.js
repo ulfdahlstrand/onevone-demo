@@ -73,7 +73,7 @@ matchSchema.methods.copyValuesFromMatch = function (match) {
 
 matchSchema.methods.updateMatchFromPlayedMatches = function(playedMatches, _callback){
 		var that = this;
-    	playedMatches.forEach(function(playedMatch){	
+    	playedMatches.forEach(function(playedMatch){
 			playedMatch.games.forEach(function(game){
 				var mappedlolmatch = matchSchema.statics.mapFromLolMatch(playedMatch.summonerId, game);
 				if(_.isEqual(_.sortBy(that.summonerIds), _.sortBy(mappedlolmatch.summonerIds))){
