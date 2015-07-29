@@ -12,6 +12,7 @@ var lolApi = require('./../../shared/services/lolApi');
 var matchProcessor = require('./../services/matchProcessor');
 var recentMatchService = require('./../services/recentMatchService');
 var tournamentService = require('./../services/tournamentService');
+var matchStatisticsService = require("./../services/matchStatisticsService");
 
 function MatchPipeline() {
 	var that = this;
@@ -44,9 +45,10 @@ function MatchPipeline() {
 			tournamentService.getActiveTournaments,
 			tournamentService.getSummonersInActiveTournament,
 			recentMatchService.getRecentGamesForSummonersInDb,
-			recentMatchService.getRecentGamesForSummonersNotInDb,
+		//	recentMatchService.getRecentGamesForSummonersNotInDb,
 			matchProcessor.processMatches,
 	    	tournamentService.updateTournamentWithMatchResults,
+	    	matchStatisticsService.calculateMatchStatisticsForValidMatches,
 	    	tournamentService.saveTournaments,
 	    	that.processStatistics
 	    ];

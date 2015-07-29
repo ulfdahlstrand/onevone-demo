@@ -4,12 +4,10 @@ var moment = require("moment");
 var config = require("../../config");
 var http = require('request');
 var when = require('when');
-var pipeline = require('when/pipeline');
 
 var lolApi = require('./../../shared/services/lolApi');
 var leagueApi = require('./../../shared/services/leagueApi');
 
-var League = require('./../../shared/models/League');
 function TournamentService() {
 	var that = this;
 
@@ -67,10 +65,7 @@ function TournamentService() {
 	    		if(!match.hasBeenPlayed){
 	    		
 		    		match.updateMatchFromPlayedMatches(validMatches, statistics.incrementUpdatedGames);
-	    		}
-
-	    		if(!match.hasBeenPlayed){
-		    		numberOfUnplayedMatches += 1;
+	    			numberOfUnplayedMatches += 1;
 	    		}
 	    	});
 			league.numberOfUnplayedMatches = numberOfUnplayedMatches;

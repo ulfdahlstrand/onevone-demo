@@ -129,7 +129,6 @@ function ClientApi() {
 				deferred.resolve(tournament);
 			}
 		});
-
 		return deferred.promise;
 	};
 

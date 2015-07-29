@@ -229,6 +229,14 @@ function LeagueApi() {
 
 			return deferred.promise;
 		};
+
+		that.saveMatchStatistics = function(matchStatistics){
+			var deferred = when.defer();
+			
+			console.log(matchStatistics);
+
+			return deferred.promise;
+		};
 	});
 }
 

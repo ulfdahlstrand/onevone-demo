@@ -17,25 +17,27 @@ function MatchProcessor() {
 		pipelineContainer.validMatches = [];
 		
 		var recentMatches = pipelineContainer.recentMatches;
+		if(recentMatches){
+			recentMatches.forEach(function(summonerMatch){
+				var validMatches = {
+					"summonerId":summonerMatch.summonerId,
+					"games":[]
+				};
 
-		recentMatches.forEach(function(summonerMatch){
-			var validMatches = {
-				"summonerId":summonerMatch.summonerId,
-				"games":[]
-			};
+				summonerMatch.games.forEach(function(game){
+					statistics.incrementImportedGames();
+					if(validateGame(game)){
+						validMatches.games.push(game);
+						statistics.incrementValidGames();
+					}				
+				});
 
-			summonerMatch.games.forEach(function(game){
-				statistics.incrementImportedGames();
-				if(validateGame(game)){
-					validMatches.games.push(game);
-					statistics.incrementValidGames();
-				}				
-			});
+				if(validMatches.games.length > 0){
+					pipelineContainer.validMatches.push(validMatches);	
+				}
+			});	
+		}
 
-			if(validMatches.games.length > 0){
-				pipelineContainer.validMatches.push(validMatches);	
-			}
-		});	
 
 		deferred.resolve(pipelineContainer);
 		return deferred.promise;
@@ -45,8 +47,8 @@ function MatchProcessor() {
 
 		if(game.gameType !== 'CUSTOM_GAME') { return false; }
 		if(!game.hasOwnProperty("fellowPlayers")) { return false; }
-	//	if(game.fellowPlayers.length !== 1) { return false; }
-	//	if(game.teamId === game.fellowPlayers[0].teamId) { return false; }
+		if(game.fellowPlayers.length !== 1) { return false; }
+		if(game.teamId === game.fellowPlayers[0].teamId) { return false; }
 
 		return true;
 
