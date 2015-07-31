@@ -45,7 +45,7 @@ function MatchPipeline() {
 			tournamentService.getActiveTournaments,
 			tournamentService.getSummonersInActiveTournament,
 			recentMatchService.getRecentGamesForSummonersInDb,
-		//	recentMatchService.getRecentGamesForSummonersNotInDb,
+			recentMatchService.getRecentGamesForSummonersNotInDb,
 			matchProcessor.processMatches,
 	    	tournamentService.updateTournamentWithMatchResults,
 	    	matchStatisticsService.calculateMatchStatisticsForValidMatches,
