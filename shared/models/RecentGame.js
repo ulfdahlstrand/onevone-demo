@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var recentGameSchema = mongoose.Schema({
     summonerId: Number,
-    data: Object,
+    data: {},
     lastUpdated: { type: Date, default: Date.now }
 });
 

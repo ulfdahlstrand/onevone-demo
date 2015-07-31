@@ -23,16 +23,20 @@ that.calculateMatchStatisticsForValidMatches = function(pipelineContainer){
 
 				aggregatedMatch.push({ "summonerId":summonerId, "game": game });
 			});
-
-
-			//if(game[validMatch.gameId])
-			//TODO: create mongoose object for matchstatistics
-			//populate object
-			//save object
-			//leagueApi.saveMatchStatistics(validMatch);
 		});
+		
+		for(var gameId in aggregatedMatches) {
+			var games = aggregatedMatches[gameId];
+			var matchstatistics = leagueApi.createMatchStatistics(gameId);
+			games.forEach(function(game){
+		   		var playerStatistics = leagueApi.createPlayerStatistics(game);
+		   		matchstatistics.addPlayerStatistic(playerStatistics);
+		   		matchstatistics.matches.push(game);
+		    });
 
-
+			leagueApi.saveMatchStatistics(matchstatistics);
+		}
+		
 		deferred.resolve(pipelineContainer);
 		return deferred.promise;
 	};

@@ -9,7 +9,8 @@ var Match = require('./../models/Match');
 var Summoner = require('./../models/Summoner');
 var RecentGame = require('./../models/RecentGame');
 var MatchHelper = require('./../helpers/MatchHelper');
-
+var MatchStatistic = require('./../models/MatchStatistic');
+var PlayerStatistic = require('./../models/PlayerStatistic');
 
 function LeagueApi() {
 	var that = this;
@@ -230,13 +231,46 @@ function LeagueApi() {
 			return deferred.promise;
 		};
 
+		//matchStatistics related functions
+		that.createMatchStatistics = function(gameId){
+			var matchStatistics = new MatchStatistic();
+			matchStatistics.gameId = gameId;
+			return matchStatistics;
+		}
+
 		that.saveMatchStatistics = function(matchStatistics){
 			var deferred = when.defer();
-			
-			console.log(matchStatistics);
+			MatchStatistic.update({ gameId: matchStatistics.gameId }, 
+				{ $set: 
+					{ 
+						playerStatistics: matchStatistics.playerStatistics,
+						matches: matchStatistics.matches,
+						csTot: matchStatistics.csTot,
+						damageTot: matchStatistics.damageTot,
+						goldTot: matchStatistics.goldTot,
+					} 
+				}, 
+				{ upsert: true }, 
+				function(){});
 
 			return deferred.promise;
 		};
+
+		that.createPlayerStatistics = function(game){
+			var playerStatistic = new PlayerStatistic();
+			var stats = game.game.stats;
+		   	var gameLength = stats.timePlayed / 60;
+		   	playerStatistic.summonerId = game.summonerId;
+		   	playerStatistic.id = game.summonerId;
+		   	playerStatistic.cs = stats.minionsKilled; 
+		   	playerStatistic.csMin = stats.minionsKilled / gameLength;
+			playerStatistic.gold = stats.goldEarned;
+			playerStatistic.goldMin = stats.goldEarned / gameLength;
+			playerStatistic.damage = stats.totalDamageDealt;
+			playerStatistic.damageMin = stats.totalDamageDealt / gameLength;
+			return playerStatistic;
+		}
+
 	});
 }
 

@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var summonerSchema = mongoose.Schema({
     summonerId: Number,
     name: String,
-    data: Object,
+    data: {},
     lastUpdated: { type: Date, default: Date.now }
 });
 
