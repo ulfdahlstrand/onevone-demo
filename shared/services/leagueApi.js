@@ -261,7 +261,6 @@ function LeagueApi() {
 			var stats = game.game.stats;
 		   	var gameLength = stats.timePlayed / 60;
 		   	playerStatistic.summonerId = game.summonerId;
-		   	playerStatistic.id = game.summonerId;
 		   	playerStatistic.cs = stats.minionsKilled; 
 		   	playerStatistic.csMin = stats.minionsKilled / gameLength;
 			playerStatistic.gold = stats.goldEarned;
