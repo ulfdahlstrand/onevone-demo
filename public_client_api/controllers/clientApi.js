@@ -12,7 +12,7 @@ var lolApi = require('./../../shared/services/lolApi');
 function ClientApi() {
 	var that = this;
 
-	that.retrieveSummonerByName = function(summonerName){
+	that.retrieveSummonerByName = function(summonerName, regionId){
 		var deferred = when.defer();
 		summonerName = summonerName.toLowerCase();
 		leagueApi.getSummonerByName(summonerName).then(function(summoner){
@@ -34,7 +34,7 @@ function ClientApi() {
 		return deferred.promise;
 	};
 
-	that.retrieveSummonerById = function(summonerId){
+	that.retrieveSummonerById = function(summonerId, regionId){
 		var deferred = when.defer();
 		leagueApi.getSummonerById(summonerId).then(function(summoner){
             if (summoner) {
@@ -54,7 +54,7 @@ function ClientApi() {
 		return deferred.promise;
 	};
 
-	that.retrieveSummonerTournaments = function(summonerId){
+	that.retrieveSummonerTournaments = function(summonerId, regionId){
 		var deferred = when.defer();
 		//call league api to get leagues for summoner id
 
@@ -67,13 +67,13 @@ function ClientApi() {
 		return deferred.promise;
 	};
 
-	that.getTournamentById = function(tournamentId){
+	that.getTournamentById = function(tournamentId, regionId){
 		var deferred = when.defer();
 		//call league api to get leagues for summoner id
 
 		leagueApi.getTournamentById(tournamentId).then(function(tournament){
             if (tournament) {
-                console.log('Tournament found in DB')
+                console.log('Tournament found in DB');
 				deferred.resolve(tournament)
 			}
 		});
@@ -81,7 +81,7 @@ function ClientApi() {
 		return deferred.promise;
 	};
 
-	that.getStandingsInTournament = function(tournamentId){
+	that.getStandingsInTournament = function(tournamentId, regionId){
 		var deferred = when.defer();
 		//call league api to get leagues for summoner id
 
@@ -121,7 +121,7 @@ function ClientApi() {
 		return deferred.promise;
 	};
 
-	that.createTournament = function(tournamentName, summoners){
+	that.createTournament = function(tournamentName, summoners, regionId){
 		var deferred = when.defer();
 		leagueApi.createTournament(tournamentName, summoners)
 		.then(function(tournament){
@@ -132,7 +132,7 @@ function ClientApi() {
 		return deferred.promise;
 	};
 
-	that.startTournament = function(tournamentId){
+	that.startTournament = function(tournamentId, regionId){
 		var deferred = when.defer();
 		//call league api to get leagues for summoner id
 		leagueApi.startTournament(tournamentId)

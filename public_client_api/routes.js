@@ -33,7 +33,7 @@ module.exports = function() {
 
 	App.Express.use(cors());
 
-	App.Express.get( apiBaseRoute + "/summoner/:id", validateToken, function (req, res) {
+	App.Express.get( apiBaseRoute + "/region/:regionId/summoner/:id", validateToken, function (req, res) {
 		clientApi.retrieveSummonerById(req.params.id)
 			.then(function(response) {
 				res.send(response);
@@ -47,7 +47,7 @@ module.exports = function() {
 			});
 	});
 
-	App.Express.get( apiBaseRoute + "/summoner/name/:summoner_name", validateToken, function (req, res) {
+	App.Express.get( apiBaseRoute + "/region/:regionId/summoner/name/:summoner_name", validateToken, function (req, res) {
 		clientApi.retrieveSummonerByName(req.params.summoner_name)
 			.then(function(response) {
 				res.send(response);
